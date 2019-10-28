@@ -49,8 +49,11 @@ class WorkerNode:
             after split
             value = "2.62"
         '''
-        part = data.split(self.sensor + ':')[1]
-        value = part.split('#')[0]
+        try:
+            part = data.split(self.sensor + ':')[1]
+            value = part.split('#')[0]
+        except TypeError:
+            return float(0)
         return float(value)
 
     def send_result(self, filename: str):
@@ -71,7 +74,6 @@ class WorkerNode:
         while True:
             try:
                 data = self.waspmote.readline().decode('ascii', 'backslashreplace') # read '\n' terminated line
-                print(str(datetime.now()) + ' ' + data, end='')
                 rospy.loginfo(data)
                 logfile.write(str(datetime.now().timestamp()) + ' ' + str(data))
 
