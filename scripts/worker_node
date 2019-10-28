@@ -3,6 +3,8 @@
 
 # Standart, System and Third party
 import serial
+import tempfile
+from datetime import datetime
 
 # ROS
 import rospy
@@ -13,6 +15,7 @@ from std_srvs.srv import Empty
 from robonomics_msgs.msg import Result
 from ipfs_common.msg import Multihash
 from ethereum_common.msg import Address
+from ipfsapi import connect
 
 
 class WorkerNode:
@@ -50,25 +53,31 @@ class WorkerNode:
         value = part.split('#')[0]
         return float(value)
 
-    def send_result(self, value: float):
+    def send_result(self, filename: str):
+        ipfsclient = connect(rospy.get_param('/liability/infochan/ipfs_channel/ipfs_http_provider'))
+
+        response = ipfsclient.add(filename)
         res = Result()
         res.liability = Multihash(self.liability)
-        res.result = # TODO IPFS HASH OF LOG FILE
+        res.result = response['Hash']
         res.success = True
+
+        rospy.loginfo(res)
 
         self.result_pub.publish(res)
 
-
     def spin(self):
+        logfile = tempfile.NamedTemporaryFile(delete=False)
         while True:
             try:
                 data = self.waspmote.readline().decode('ascii', 'backslashreplace') # read '\n' terminated line
                 rospy.loginfo(data)
+                logfile.write(str(datetime.now().timestamp()) + ' ' + data)
 
                 sensor_value = self.extract_value(data)
 
                 if sensor_value >= self.limit:
-                    self.send_result(sensor_value)
+                    self.send_result(logfile.name)
 
             except KeyboardInterrupt:
                 exit(0)

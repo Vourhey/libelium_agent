@@ -1,6 +1,7 @@
 { stdenv
 , mkRosPackage
 , robonomics_comm
+, python3Packages
 }:
 
 mkRosPackage rec {
