@@ -52,7 +52,7 @@ class WorkerNode:
         try:
             part = data.split(self.sensor + ':')[1]
             value = part.split('#')[0]
-        except TypeError:
+        except:
             return float(0)
         return float(value)
 
