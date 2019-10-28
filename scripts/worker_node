@@ -67,7 +67,7 @@ class WorkerNode:
         self.result_pub.publish(res)
 
     def spin(self):
-        logfile = tempfile.NamedTemporaryFile(delete=False)
+        logfile = tempfile.NamedTemporaryFile(mode='w+', delete=False)
         while True:
             try:
                 data = self.waspmote.readline().decode('ascii', 'backslashreplace') # read '\n' terminated line
