@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 
 # Standart, System and Third party
-from collections import namedtuple
-from queue import Queue
-from threading import Thread
 import serial
 
 # ROS
@@ -14,7 +11,8 @@ from std_srvs.srv import Empty
 
 # AIRA
 from robonomics_msgs.msg import Result
-from robonomics_liability.msg import Liability
+from ipfs_common.msg import Multihash
+from ethereum_common.msg import Address
 
 
 class WorkerNode:
@@ -26,15 +24,52 @@ class WorkerNode:
         rospy.loginfo('Waspmote starting with ' + device + '...')
         self.waspmote = serial.Serial(device, 115200)
 
+        self.liability = rospy.get_param("~liability")
+        if self.liability == "":
+            rospy.logerr("Liability address must be specified!")
+            exit(1)
+
         self.result_pub = rospy.Publisher('/liability/infochan/eth/signing/result', Result, queue_size=128)
+        self.sensor = rospy.get_param("~sensor")
+        self.limit = float(rospy.get_param("~limit"))
 
         rospy.loginfo('Worker node launched.')
+
+    def extract_value(self, data: str) -> float:
+        '''
+        Example:
+            data = "<=>\x86#5E1567057C105409#DOV01SW#0#WT:24.58#PH:2.62#DO:-4.2#COND:50.9#"
+
+            after split
+            part = "2.62#DO:-4.2#COND:50.9#"
+
+            after split
+            value = "2.62"
+        '''
+        part = data.split(self.sensor + ':')[1]
+        value = part.split('#')[0]
+        return float(value)
+
+    def send_result(self, value: float):
+        res = Result()
+        res.liability = Multihash(self.liability)
+        res.result = # TODO IPFS HASH OF LOG FILE
+        res.success = True
+
+        self.result_pub.publish(res)
+
 
     def spin(self):
         while True:
             try:
                 data = self.waspmote.readline().decode('ascii', 'backslashreplace') # read '\n' terminated line
                 rospy.loginfo(data)
+
+                sensor_value = self.extract_value(data)
+
+                if sensor_value >= self.limit:
+                    self.send_result(sensor_value)
+
             except KeyboardInterrupt:
                 exit(0)
             except Exception as e:

@@ -1,3 +1,12 @@
 <launch>
-  <node name="worker" pkg="libelium_agent" type="worker_node" output="screen" />
+    <arg name="device" default="/dev/ttyUSB0" />
+    <arg name="sensor" default="PH" />
+    <arg name="limit" default="4.0" />
+    <arg name="liability" default="" />
+    <node name="worker" pkg="libelium_agent" type="worker_node" output="screen">
+        <param name="device" value="$(arg device)" />
+        <param name="sensor" value="$(arg sensor)" />
+        <param name="limit" value="$(arg limit)" />
+        <param name="liability" value="$(arg liability)" />
+    </node>
 </launch>
