@@ -1,0 +1,5 @@
+Libelium Agent model.txt file
+
+Reads the data from Libelium sensors
+In case of going beyond the limit packs the message in Result and sends to the Robonomics Network
+A liability address is predefined
