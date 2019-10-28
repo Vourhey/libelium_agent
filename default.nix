@@ -11,7 +11,7 @@ mkRosPackage rec {
 
   src = ./.;
 
-  propagatedBuildInputs = with python3Packages; [ robonomics_comm pyserial ];
+  propagatedBuildInputs = with python3Packages; [ robonomics_comm pyserial ipfsapi ];
 
   meta = with stdenv.lib; {
     description = "Libelium agent";
