@@ -14,9 +14,9 @@ mkRosPackage rec {
   propagatedBuildInputs = with python3Packages; [ robonomics_comm pyserial ];
 
   meta = with stdenv.lib; {
-    description = "Simple modular AIRA example effort";
-    homepage = http://github.com/airalab/autonomous_agent_template;
+    description = "Libelium agent";
+    homepage = http://github.com/vourhey/libelium_agent;
     license = licenses.bsd3;
-    maintainers = with maintainers; [ akru ];
+    maintainers = with maintainers; [ vourhey ];
   };
 }
