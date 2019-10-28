@@ -72,7 +72,7 @@ class WorkerNode:
             try:
                 data = self.waspmote.readline().decode('ascii', 'backslashreplace') # read '\n' terminated line
                 rospy.loginfo(data)
-                logfile.write(str(datetime.now().timestamp()) + ' ' + data)
+                logfile.write(str(datetime.now().timestamp()) + ' ' + str(data))
 
                 sensor_value = self.extract_value(data)
 
