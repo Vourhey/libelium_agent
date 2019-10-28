@@ -11,7 +11,7 @@ nix build -f release.nix
 
 ```
 source result/setup.bash (zsh)
-roslaunch libelium_agent worker_node device:="/dev/ttyUSB0" sensor:="PH" limit:="4.0" liability:="LIABILITY ADDRESS"
+roslaunch libelium_agent worker.launch device:="/dev/ttyUSB0" sensor:="PH" limit:="4.0" liability:="LIABILITY ADDRESS"
 ```
 
 Where:
