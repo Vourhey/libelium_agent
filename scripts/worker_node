@@ -71,6 +71,7 @@ class WorkerNode:
         while True:
             try:
                 data = self.waspmote.readline().decode('ascii', 'backslashreplace') # read '\n' terminated line
+                print(str(datetime.now()) + ' ' + data, end='')
                 rospy.loginfo(data)
                 logfile.write(str(datetime.now().timestamp()) + ' ' + str(data))
 
