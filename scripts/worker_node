@@ -57,7 +57,8 @@ class WorkerNode:
         return float(value)
 
     def send_result(self, filename: str):
-        ipfsclient = connect(rospy.get_param('/liability/infochan/ipfs_channel/ipfs_http_provider'))
+        # ipfsclient = connect(rospy.get_param('/liability/infochan/ipfs_channel/ipfs_http_provider'))
+        ipfsclient = connect()
 
         response = ipfsclient.add(filename)
         res = Result()
