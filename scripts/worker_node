@@ -19,6 +19,7 @@ from ipfsapi import connect
 
 
 class WorkerNode:
+
     def __init__(self):
         rospy.init_node('worker')
         rospy.loginfo('Launching worker node...')
